@@ -1,0 +1,32 @@
+<div class="jumbotron">
+  <h1 class="text-center">Liste des items disponibles</h1>
+</div>
+<table class="table table-hover">
+  <thead>
+    <tr class="table-primary">
+      <th class="w-50 align-middle">
+        Nom du produit
+        <a class="ml-3" id="last_item" [routerLink]="['/'+lastItemVisited]">(Dernière fiche consultée)</a>
+        <input type="text" placeholder="Recherche" class="form-control w-75" (input)="onInput($event.target.value)">
+      </th>
+      <th class="w-25 align-middle">
+        Prix
+        <div class="btn-group-vertical ml-3">
+          <button (click)="onTriCroissant()" class="btn btn-primary btn-sm">▲</button>
+          <button (click)="onTriDecroissant()" class="btn btn-primary btn-sm">▼</button>
+        </div>
+      </th>
+      <th class="w-25 align-middle">Quantité</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let item of items">
+      <!-- on filtre en fonction de la recherche. La conversion en minuscules permet de ne pas tenir compte de la casse -->
+      <tr *ngIf="item.product_name.toLowerCase().includes(nomRecherche.toLowerCase())" (click)="onClickDetails(item._id)">
+        <td class="w-50">{{item.product_name}}</td>
+        <td class="w-25">{{item.unit_cost}}</td>
+        <td class="w-25">{{item.quantity}}</td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
