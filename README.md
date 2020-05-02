@@ -15,6 +15,10 @@ Pour installer les dépendances du projet, déplacez vous dans le dossier du pro
 ```
 npm install
 ```
+Dans le cas où des vulnérabilités sont trouvées, vous pouvez les résoudre avec la commande
+```
+npm audit fix
+```
 Si vous n'avez pas la CLI d'Angular d'installée, installez la avec
 ```
 npm install -g @angular/cli
@@ -23,6 +27,7 @@ Vous pouvez maintenant lancer l'application localement en tapant
 ```
 ng serve
 ```
+L'application est alors disponible localement à l'adresse http://localhost:4200/
 
 
 ### Manuel d'utilisation
