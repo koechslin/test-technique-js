@@ -21,8 +21,8 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let item of items">
-      <!-- on filtre en fonction de la recherche. La conversion en minuscules permet de ne pas tenir compte de la casse -->
-      <tr *ngIf="item.product_name.toLowerCase().includes(nomRecherche.toLowerCase())" (click)="onClickDetails(item._id)">
+      <!-- on filtre en fonction de ce que l'utilisateur a tapé. La conversion en minuscules permet de ne pas tenir compte de la casse -->
+      <tr title="Informations du produit" *ngIf="item.product_name.toLowerCase().includes(nomRecherche.toLowerCase())" (click)="onClickDetails(item._id)">
         <td class="w-50">{{item.product_name}}</td>
         <td class="w-25">{{item.unit_cost}}</td>
         <td class="w-25">{{item.quantity}}</td>

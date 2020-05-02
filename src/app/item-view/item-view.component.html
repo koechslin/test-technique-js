@@ -1,13 +1,31 @@
 <ng-container *ngIf="item!=null">
-  <h1 class="display-3 text-center text-primary">{{item.product_name}}</h1>
-  <h2><span class="underline">Informations de l'item</span> :</h2>
-  <p class="mt-3">
-    <span class="underline">ID</span> : {{item._id.$oid}}<br/>
-    <span class="underline">Supplier</span> : {{item.supplier}}<br/>
-    <span class="underline">Quantité en stock</span> : {{item.quantity}}<br/>
-    <span class="underline">Prix unitaire</span> : {{item.unit_cost}}
-  </p>
+  <div class="card mt-5">
+    <div class="card-header">
+      <h1 class="display-3 text-center text-primary">{{item.product_name}}</h1>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered my-auto text-center">
+        <tr>
+          <td class="w-50 table-primary">ID</td>
+          <td class="w-50">{{item._id.$oid}}</td>
+        </tr>
+        <tr>
+          <td class="w-50 table-primary">Supplier</td>
+          <td class="w-50">{{item.supplier}}</td>
+        </tr>
+        <tr>
+          <td class="w-50 table-primary">Quantité en stock</td>
+          <td class="w-50">{{item.quantity}}</td>
+        </tr>
+        <tr>
+          <td class="w-50 table-primary">Prix unitaire</td>
+          <td class="w-50">{{item.unit_cost}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </ng-container>
+<!-- Si l'item est null (non trouvé par le service) on affiche une erreur 404 -->
 <ng-container *ngIf="item==null">
   <h1 class="display-1">Erreur 404</h1>
   <p>L'item demandé n'a pas été trouvé !</p>

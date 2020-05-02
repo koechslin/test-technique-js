@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ItemsService } from '../services/items.service';
 import { Item } from '../models/item.model';
 import { Subscription } from 'rxjs';
-import { Router,RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-items',
@@ -12,13 +12,14 @@ import { Router,RouterModule } from '@angular/router';
 export class ListItemsComponent implements OnInit, OnDestroy {
 
   items: Item[]; // contient tous les items envoyés par le service
-  itemsSubscription: Subscription; // subscription pour récupérer les items envoyés par le service
+  itemsSubscription: Subscription; // subscription pour récupérer automatiquement les items envoyés par le service
   nomRecherche: string = ""; // variable permettant d'effectuer la recherche par nom
-  lastItemVisited: string;
+  lastItemVisited: string; // '$oid' du dernier item consulté
 
   constructor(private itemsService: ItemsService, private router: Router) { }
 
   ngOnInit(): void {
+    // on 'subscribe' au subject du service pour récupérer les données automatiquement
     this.itemsSubscription = this.itemsService.itemsSubject.subscribe(
       (items: Item[]) => {
         this.items = items;
@@ -26,7 +27,7 @@ export class ListItemsComponent implements OnInit, OnDestroy {
     );
     this.itemsService.emitItemsSubject(); // on lance l'émission à l'initialisation pour bien récupérer les items
 
-    let idStorage: string = window.localStorage.getItem("idLastItem");
+    let idStorage: string = window.localStorage.getItem("idLastItem"); // on récupère dans le localStorage le '$oid' du dernier item consulté (si il y en a un)
     if(idStorage) {
       document.getElementById("last_item").hidden = false;
       this.lastItemVisited = idStorage;
@@ -36,7 +37,7 @@ export class ListItemsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.itemsSubscription.unsubscribe(); // à la destruction on unsubscribe pour éviter d'éventuels problèmes
+    this.itemsSubscription.unsubscribe(); // à la destruction on 'unsubscribe' pour éviter d'éventuels problèmes
   }
 
   onTriCroissant() {
@@ -52,8 +53,8 @@ export class ListItemsComponent implements OnInit, OnDestroy {
   }
 
   onClickDetails(id: any) {
-    window.localStorage.setItem("idLastItem",id.$oid); // on place l'id dans le localStorage pour retenir le dernier lien cliqué
-    this.router.navigate(['/',id.$oid]); // utilisation du "oid" (à l'intérieur de l'id) pour la route
+    window.localStorage.setItem("idLastItem",id.$oid); // on place le '$oid' dans le localStorage pour retenir le dernier item visité
+    this.router.navigate(['/',id.$oid]); // utilisation du '$oid' (à l'intérieur de l'_id de l'item) pour la route
   }
 
 

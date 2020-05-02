@@ -8,13 +8,15 @@ import { ItemsService } from './services/items.service';
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule, Routes } from "@angular/router";
 
+// array des 'routes' de l'application
 const appRoutes: Routes = [
   { path: '', component: ListItemsComponent },
   { path: ':id', component: ItemViewComponent },
   { path: '**', redirectTo: '' }
 ];
 
-export function initData(itemsService: ItemsService) { // méthode exécutée avant l'initialisation de tous les composants, afin qu'on ait bien les données
+export function initData(itemsService: ItemsService) {
+  // méthode exécutée avant l'initialisation de tous les composants afin que les données soient disponibles
   return () => itemsService.getItems();
 }
 
@@ -31,7 +33,7 @@ export function initData(itemsService: ItemsService) { // méthode exécutée av
   ],
   providers: [
     ItemsService,
-    { provide: APP_INITIALIZER, useFactory: initData, deps: [ItemsService], multi: true } // APP_INITIALIZER pour charger les données avant le chargement des composants
+    { provide: APP_INITIALIZER, useFactory: initData, deps: [ItemsService], multi:true } // APP_INITIALIZER pour charger les données avant le chargement des composants
   ],
   bootstrap: [AppComponent]
 })

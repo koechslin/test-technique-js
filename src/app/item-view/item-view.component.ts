@@ -10,11 +10,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ItemViewComponent implements OnInit {
 
-  item: Item;
+  item: Item; // item à afficher
 
   constructor(private itemsService: ItemsService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    // on récupère l'item via le service et le '$oid' dans l'URL
     this.item = this.itemsService.getItemById(this.route.snapshot.params['id']);
   }
 

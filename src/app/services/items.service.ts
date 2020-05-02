@@ -10,24 +10,25 @@ export class ItemsService { // service qui va gérer le stockage/chargement des 
 
   items: Item[] = []; // contient tous les items chargés
   itemsSubject = new Subject<Item[]>(); // permet de communiquer automatiquement les données aux composants
-  private itemsJsonURL = 'assets/items.json';
+  private itemsJsonURL = 'assets/items.json'; // URL du fichier JSON contenant les données
 
   constructor(private httpClient: HttpClient) {
   }
 
-  emitItemsSubject() {
-    this.itemsSubject.next(this.items.slice()); // on envoie une copie de l'array items
+  emitItemsSubject() { // méthode envoyant une copie de l'array 'items' grâce au Subject
+    this.itemsSubject.next(this.items.slice());
   }
 
-  getItems() { // méthode qui va charger les items depuis le JSON (socké dans assets)
+  getItems() { // méthode qui va charger les items depuis le JSON (stocké dans assets)
 
-    // on retourne une Promise afin qu'on puisse ensuite attendre que les données soient bien arrivées
+    // on retourne une Promise afin qu'on puisse (à l'initialisation) attendre que les données soient bien arrivées
     // (cela est utile si par exemple on rafraîchit la page d'un Item, ou que l'on accède directement à une page d'un Item en tapant l'URL)
     return new Promise((resolve, reject) => {
+      // requête grâce à HttpClient pour récupérer les items
       this.httpClient.get<Item[]>(this.itemsJsonURL).subscribe(
         (response) => {
           this.items = response;
-          this.emitItemsSubject(); // quand on charge les données, on les émet également pour les autres composants
+          this.emitItemsSubject(); // une fois les données reçues, on les émet pour les autres composants
           resolve();
         },
         (error) => {
@@ -38,15 +39,15 @@ export class ItemsService { // service qui va gérer le stockage/chargement des 
     });
   }
 
-  orderItemsByAscendingPrice() {
+  orderItemsByAscendingPrice() { // méthode triant les items dans l'array par prix croissant
     this.items.sort(function(itemA: Item, itemB: Item): number {
       // tout d'abord on convertit les prix (qui sont des string) en number en enlevant les caractères qui ne sont ni des chiffres ni un point
-      let numberA: number = Number(itemA.unit_cost.replace(/[^0-9.-]+/g,""));
-      let numberB: number = Number(itemB.unit_cost.replace(/[^0-9.-]+/g,""));
+      let costA: number = Number(itemA.unit_cost.replace(/[^0-9.-]+/g,""));
+      let costB: number = Number(itemB.unit_cost.replace(/[^0-9.-]+/g,""));
 
-      if (numberA<numberB) {
+      if (costA<costB) {
         return -1;
-      } else if (numberA>numberB) {
+      } else if (costA>costB) {
         return 1;
       } else {
         // en cas d'égalité de prix, on trie par ordre alphabétique
@@ -60,15 +61,15 @@ export class ItemsService { // service qui va gérer le stockage/chargement des 
     this.emitItemsSubject();
   }
 
-  orderItemsByDescendingPrice() {
+  orderItemsByDescendingPrice() { // méthode triant les items dans l'array par prix décroissant
     this.items.sort(function(itemA: Item, itemB: Item): number {
       // tout d'abord on convertit les prix (qui sont des string) en number en enlevant les caractères qui ne sont ni des chiffres ni un point
-      let numberA: number = Number(itemA.unit_cost.replace(/[^0-9.-]+/g,""));
-      let numberB: number = Number(itemB.unit_cost.replace(/[^0-9.-]+/g,""));
+      let costA: number = Number(itemA.unit_cost.replace(/[^0-9.-]+/g,""));
+      let costB: number = Number(itemB.unit_cost.replace(/[^0-9.-]+/g,""));
 
-      if (numberA>numberB) {
+      if (costA>costB) {
         return -1;
-      } else if (numberA<numberB) {
+      } else if (costA<costB) {
         return 1;
       } else {
         // en cas d'égalité de prix, on trie par ordre alphabétique
@@ -82,7 +83,8 @@ export class ItemsService { // service qui va gérer le stockage/chargement des 
     this.emitItemsSubject();
   }
 
-  getItemById(id: string) { // l'id passé en paramètre correspond en fait à "l'oid" qui est dans l'objet id d'un item
+  getItemById(id: string) { // méthode pour récupérer un item grâce à son id
+    // (note : l'id passé en paramètre correspond en fait à 'l'oid' qui est dans l'objet '_id' d'un item)
     const item = this.items.find(
       (el) => {
         return el._id.$oid === id;
